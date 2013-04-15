@@ -2,9 +2,11 @@ class ControllerBase
   def initialize(request, response)
     @request = request
     @response = response
+    #@response_built = false
   end
 
   def render_content(content, body_type)
+
     @response.content_type = body_type
     @response.body = content
   
@@ -12,6 +14,8 @@ class ControllerBase
   end
 
   def redirect_to(url)
-    @response.body = "Works!" if url == '/works'
+    # need to fill in the body!
+    @response.status = 302
+    @response['location'] = url  
   end
 end
