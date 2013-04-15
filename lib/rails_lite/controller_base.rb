@@ -1,3 +1,4 @@
+require 'active_support/core_ext'
 require_relative './cookies'
 
 class ControllerBase
@@ -28,5 +29,10 @@ class ControllerBase
 
   def session
     @session ||= Session.new(@request)
+  end
+
+  def render(template_name)
+    template = File.read("./views/#{template_name}")
+    ERB.new(template).result(binding)
   end
 end

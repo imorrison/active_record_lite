@@ -3,11 +3,13 @@ require_relative './controller_base'
 require_relative './cookies'
 
 class MyController < ControllerBase
+
   def go
     if @request.path == '/redirect'
       redirect_to("http://www.google.com")
     else
-      render_content("#{@request.query}", 'text/text')
+      @number = 6
+      render_content(render("test.html.erb"), 'text/text')
     end
   end
 end
