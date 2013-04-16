@@ -1,3 +1,5 @@
+require_relative 'params'
+
 class Route
   attr_reader :verb, :pattern, :controller_class, :action_name
   def initialize(verb, pattern, controller_class, action_name)
@@ -13,6 +15,8 @@ class Route
 end
 
 class Router
+  include Params
+
   def initialize
     @routes = []
   end
@@ -33,26 +37,27 @@ class Router
   end
 
   def match(request_path)
-    # find the first route that matches
-    match = @routes.select {|route| request_path =~ route.pattern }.first
+    match_data = @routes.select {|route| request_path =~ route.pattern }.first
   end
 
   def run(req, res)
-    # get the name of the controller class form the matched route
-    route = match(req.path) 
+    route = match(req.path)
     if route
-      route.controller_class.new(req, res).invoke_action(route.action_name)  
+      # pass the params to the new controller
+      params = parse(req, route.pattern)
+      
+      # add the body params, but only in a post
+      if route.verb == :post
+        body_params = parse_www_encoded_form(req.body)
+        params = body_params
+      end
+
+      route.controller_class.new(req, res, params).invoke_action(route.action_name)  
     else
-      # route does not exist
       res.status = 404
     end   
   end
 end
-
-
-
-
-
 
 
 

@@ -1,14 +1,20 @@
 require 'active_support/core_ext'
 require_relative './cookies'
 
-class ControllerBase
-  attr_accessor :session 
+require_relative 'params'
 
-  def initialize(request, response)
+class ControllerBase
+  include Params
+
+  attr_accessor :session
+  attr_reader :params 
+
+  def initialize(request, response, params)
     @request = request
     @response = response
     session 
     @response_built = false
+    @params = params
   end
 
   def render_content(content, body_type)
