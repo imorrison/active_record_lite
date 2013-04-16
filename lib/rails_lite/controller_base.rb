@@ -35,4 +35,8 @@ class ControllerBase
     template = File.read("./views/#{template_name}")
     ERB.new(template).result(binding)
   end
+
+  def invoke_action(action_name)
+    self.send(action_name)
+  end
 end
