@@ -44,6 +44,7 @@ class Router
       route.controller_class.new(req, res).invoke_action(route.action_name)  
     else
       # route does not exist
+      res.status = 404
     end   
   end
 end
